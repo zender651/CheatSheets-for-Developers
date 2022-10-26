@@ -12,6 +12,9 @@
 		- [Modular Inverse](#modular-inverse)
 	- [Graphs](graphs)
 		- [BFS](#bfs)
+		- [DFS](#dfs)
+		- [Toposort](#toposort)
+		- [Implementing Dijkstra through bfs](#Dijkstra through bfs)
 		- [Disjoint Set Union](#disjoint-set-union)
 	- [Geometry](#geometry)
 		- [Linear Operations](#linear-operations)
@@ -182,6 +185,114 @@ void Graph::BFS(int s)
     }
 }
 ```
+### dfs
+```cpp
+ class Solution {
+    
+    void dfs(int node, vector<int> &vis, vector<int> adj[], vector<int> &res) {
+        res.push_back(node); 
+        vis[node] = 1; 
+        for(auto it : adj[node]) {
+            if(!vis[it]) {
+                dfs(it, vis, adj, res); 
+            }
+        }
+    }
+    
+public:
+	vector<int>dfsOfGraph(int V, vector<int> adj[]){
+	    vector<int> res; 
+	    vector<int> vis(V+1, 0); 
+        for(int i = 1;i<=V;i++) {
+        if(!vis[i]) dfs(i, vis, adj, res); 
+      }
+	    return res; 
+	}
+};
+```
+### toposort
+```cpp
+  class Solution
+{
+	public:
+	int dfs(int nde,vector<int> &vis,vector<int> adj[],stack<int> &s)
+	{
+	    vis[nde]=1;
+	    for(auto it:adj[nde])
+	    {
+	        if(!vis[it])
+	        {
+	            dfs(it,vis,adj,s);
+	        }
+	    }
+	    s.push(nde);   
+	}
+	vector<int> topoSort(int V, vector<int> adj[]) 
+	{
+	    vector<int> vis(V,0);
+	    stack<int> s;
+	    for(int i=0;i<V;i++)
+	    {
+	        if(!vis[i])
+	         {
+	             dfs(i,vis,adj,s);
+	         }
+	    }
+	    
+	    vector<int> res;
+	    
+	    while(!s.empty())
+	    {   
+	        int t=s.top();
+	        res.push_back(t);
+	        s.pop();
+	    }
+	    
+	    return res;
+	    
+	}
+};
+```
+### Dijkstra Algorithm through BFS
+```cpp
+class Solution
+{
+    public:
+    vector <int> dijkstra(int V, vector<vector<int>> adj[], int s)
+    {
+        queue<pair<int,int>> q;
+        vector<int> dist(V,0);
+        
+        for(int i=0;i<V;i++)
+        {
+            dist[i]=INT_MAX;
+        }
+        dist[s]=0;
+        q.push({0,s});
+        
+        while(!q.empty())
+        {
+            int nd=q.front().second;
+            int dis=q.front().first;
+            q.pop();
+            
+            for(auto it:adj[nd])
+            {   
+                int nxt=it[0];
+                int disnxt=it[1];
+                if(dist[nxt]>dist[nd]+disnxt)
+                {
+                    dist[nxt]=dist[nd]+disnxt;
+                    q.push({dist[nxt],nxt});
+                }
+            }
+        }
+        
+        return dist;
+    }
+};
+
+
 
 **[🔼Back to Top](#table-of-contents)**
 
